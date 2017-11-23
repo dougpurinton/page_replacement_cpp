@@ -1,0 +1,38 @@
+MinGW-w64 (GNU GCC C/C++ Compiler)
+HOME
+https://mingw-w64.org/doku.php
+
+PATH
+Go here: https://sourceforge.net/projects/mingw-w64/files/
+1) Toolchains targetting Win64
+2) Personal Builds
+3) mingw-builds
+4) 7.1.0   (choose latest, stable, build)
+5) threads-posix
+6) seh
+7) x86_64-7.1.0-release-posix-seh-rt_v5-rev0.7z (choose latest revision)
+8) Unzip this file using 7-Zip and put this unzipped folder in "C:\".
+9) Add the bin directory to the System "PATH". (ex: C:\mingw64\bin)
+
+DIRECT LINK (this might not be the most current version!)
+https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/7.1.0/threads-posix/seh/
+
+
+
+MSYS ("... a collection of GNU utilities such as bash, make, gawk and grep ...")
+HOME
+http://www.mingw.org/wiki/MSYS
+
+PATH
+Go here: https://sourceforge.net/projects/mingw/files/
+1) At top of page, click the link, "Looking for the latest version? Download mingw-get-setup.exe (86.5 kB)".
+2) Run "mingw-get-setup.exe" and click "Install".
+3) Make note of where the folder "msys" will be downloaded to (default location is "C:\MinGW") and press "Continue".
+2) In the "MinGW Installation Manager" window, in the colomn "Package", ONLY select "msys-base" by clicking it and selecting "Mark for Installation".
+3) At the top left of window, select "Installation", "Apply Changes".
+4) In the "Schedule of Pending Actions" window, select "Apply".
+5) MSYS folder location will likely be "C:\MinGW\msys". Either leave it here or copy the "msys" folder where you wish.
+NOTE: If you want a backup of MSYS for easier and faster installation next time, simply zip the entire "msys" folder.
+
+DIRECT LINK (all files are split up, with MSYS as the root directory. it's way easier to just use "mingw-get-setup.exe" however.)
+https://sourceforge.net/projects/mingw/files/MSYS/
