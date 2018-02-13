@@ -133,11 +133,8 @@ class algorithmType
 		 setCurrentCacheLine().clear();
 		 std::vector<int>().swap(setCurrentCacheLine());
 		 int currentrefstr = 0;
-		 bool entered = false; // makes sure that refstrcount has at least one element
 			for (int i = 0; i < refstrcount; i++) // we're looping through entire reference string just in case there are repeating numbers at beginning
 			{
-			 if (entered == false)
-			 {entered = true;}
 				if (std::find(setCurrentCacheLine().begin(), setCurrentCacheLine().end(), refstr[i]) == setCurrentCacheLine().end()) // As long as no duplicate pages were found in the first frame...
 				{
 				 setMiss(getMiss() + 1); // page miss, then decide what to do next depending on the algorithm.
@@ -145,15 +142,12 @@ class algorithmType
 				}
 					if (setCurrentCacheLine().size() >= getFrameFinalSize()) // create first line of cache now that all pages have been added to all frames.
 					{
-					 currentrefstr = i;
+					 currentrefstr = ++i;
 					 setRow(getRow() + 1);
 					 setVector().push_back(setCurrentCacheLine()); // add finished frames to the cache.
 					 break;
 					}
 			}
-		 if (entered == true)
-		 {currentrefstr++;}
-	 
 		 return currentrefstr;
 		}
 
@@ -647,8 +641,7 @@ int main()
  // JUST FOR FUN - Let's sum up the last frame (column) of all algorithms and display each summed row on one line, before we display each algorithm's output!
  // THIS MUST BE PLACED AFTER THE FUNCTION "calculateAllAlgorithms"!!!
 	 //================================================================================================================
-	 std::vector<int> temp_vector(algorithmType :: static_getFrameFinalSize()); // create temporary vector to store the sum of the last column of each algorithm.
-	 std::fill (temp_vector.begin(), temp_vector.end(), 0); // ensure that every element of this temporary vector is zero, as opposed to 'null'.
+	 std::vector<int> temp_vector(algorithmType :: static_getFrameFinalSize(), 0); // create temporary vector to store the sum of the last column of each algorithm.
 	 std::cout << std::endl << "Sum of last cache line: ";
 		for (unsigned int i = 0; i < algorithmType :: static_getFrameFinalSize(); i++)
 		{
