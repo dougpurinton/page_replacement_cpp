@@ -60,7 +60,7 @@ class algorithmType
 		}
 
 		// Pure virtual function that NEEDS to exist within every object of this class, as every object of this
-		// class has that member funtion called for it automatically. Plus, without it, there would be nothing to display!
+		// class has that member function called for it automatically. Plus, without it, there would be nothing to display!
 		virtual void calculateAlgorithm(const int& refstrcount, const std::vector<int>& refstr) = 0;
 
 		virtual void setMiss (unsigned int smiss) final
@@ -72,43 +72,43 @@ class algorithmType
 
 		// Returning member by reference.
 		// This breaks encapsulation, but it saves space and it's the most important member, which defines the use of this entire program.
-		virtual std::vector<std::vector <int>>& setVector () final
+		virtual std::vector<std::vector <int>> &setVector () final
 		{return alg;}
 
 		// This function is static so it may be called without an object, as it applies to all objects.
 		static void static_setFrameFinalSize (unsigned int sframe)
 		{frame = sframe;}
 
-		virtual std::vector<int>&  setCurrentCacheLine () final
+		virtual std::vector<int> &setCurrentCacheLine () final
 		{return currentcashline;}
 
-		virtual const unsigned int getFrameFinalSize () final
+		virtual unsigned int getFrameFinalSize () final
 		{return frame;}
 
-		virtual const unsigned int getMiss () final
+		virtual unsigned int getMiss () final
 		{return miss;}
 
-		virtual const unsigned int getMyId () final // Every object created will have it's own unique I.D., accessible to view via this method.
+		virtual unsigned int getMyId () final // Every object created will have it's own unique I.D., accessible to view via this method.
 		{return myid;}
 
-		virtual const std::string getName() final
+		virtual const std::string &getName() final
 		{return name;}
 
-		virtual const unsigned int getRow () final
+		virtual unsigned int getRow () final
 		{return row;}
 
-		virtual const std::vector<std::vector <int>>& getVector () final
+		virtual const std::vector<std::vector <int>> &getVector () final
 		{return alg;}
-
-		static const unsigned int static_getFrameFinalSize ()
+		
+		static unsigned int static_getFrameFinalSize ()
 		{return frame;}
 
-		static const unsigned int static_getNumObj () // This function is static so the number of objects that exisit can be displayed without the need of any one specific object.
+		static unsigned int static_getNumObj () // This function is static so the number of objects that exist can be displayed without the need of any one specific object.
 		{return numobj;}
 
 		virtual void clearAlg () final // This clears the vector's contents and size to zero.
 		{
-			for(std::vector<int>& i : alg)
+			for(std::vector<int> &i : alg)
 			{
 			 i.clear();
 			 std::vector<int>().swap(i);
@@ -117,14 +117,42 @@ class algorithmType
 		 std::vector<std::vector<int>>().swap(alg);
 		}
 
-		virtual void displayAlgorithm() // All 3 algoithms can be displayed in the same manner using this member function. If not, override it in derived class.
+		virtual void displayAlgorithm() // All 3 algorithms can be displayed in the same manner using this member function. If not, override it in derived class.
 		{
 		 std::cout << std::endl << name << " page faults: " << getMiss() << std::endl;
 			for (unsigned int a = 0; a < getFrameFinalSize(); a++) // this display method displays this multidimensional vector inversely to match textbooks etc.
 			{
-				for (unsigned int i = 0; i < getRow(); i++)
-				{std::cout << getVector()[i][a] << " ";}
-			 std::cout << std::endl;
+				for (unsigned int i = 0; i < getVector().size(); i++) // 'getVector().size()' is the same as 'getRow()'.
+				{
+					// getFrameFinalSize() doesn't account for the reference string possibly not having as many unique numbers
+					// as there are frames, which was calculated in the 'getInput' function from the user's input.
+					if (a < getVector()[i].size())
+					{
+					 std::cout << getVector()[i][a];
+						if ((i + 1) < getVector().size())
+						{
+						 std::cout << " ";
+						}
+					}
+				}
+				// This works just fine, but had this been a jagged array/vector, we would want to instead make sure that 'a',
+				// which is the outer loop, is less than the BIGGEST 'getVector()[i].size()' from the inner loop.
+				if ((a + 1) < getVector()[0].size())
+				{
+				 std::cout << std::endl;
+				}
+				else
+				{
+				 // We know that if the row we're currently checking (indexed by 'a') is equal to the maximum column size,
+				 // because it's zero indexed, then there won't be anything left in the column ('getVector()[0].size()').
+					
+					// Not really necessary, but without this check, this conditional statement would explicitly break out
+					// of the outer loop on the last iteration, every single time, and not just when needed.
+					if ((a + 1) < getFrameFinalSize())
+					{
+					 break;
+					}
+				}
 			}
 		}
 
@@ -140,13 +168,13 @@ class algorithmType
 				 setMiss(getMiss() + 1); // page miss, then decide what to do next depending on the algorithm.
 				 setCurrentCacheLine().push_back(refstr[i]);
 				}
-					if (setCurrentCacheLine().size() >= getFrameFinalSize()) // create first line of cache now that all pages have been added to all frames.
-					{
-					 currentrefstr = ++i;
-					 setRow(getRow() + 1);
-					 setVector().push_back(setCurrentCacheLine()); // add finished frames to the cache.
-					 break;
-					}
+				if (setCurrentCacheLine().size() >= getFrameFinalSize() || (i + 1 >= refstrcount)) // create first line of cache now that all pages have been added to all frames.
+				{
+				 currentrefstr = i + 1;
+				 setRow(getRow() + 1);
+				 setVector().push_back(setCurrentCacheLine()); // add finished frames to the cache.
+				 break;
+				}
 			}
 		 return currentrefstr;
 		}
@@ -196,7 +224,7 @@ class Lru : public algorithmType
 
 	virtual void calculateAlgorithm(const int& refstrcount, const std::vector<int>& refstr) override // Required for all derived classes of "algorithmType".
 	{
-	 // This algorithm uses the "stack" method, as it requires less code and is easier to understand. However, it is slightler slower than "counters".
+	 // This algorithm uses the "stack" method, as it requires less code and is easier to understand. However, it is slightly slower than "counters".
 	 std::list<int> lst;
 	 int start = fillFirstCacheLine(refstr, refstrcount);  // fill in first cache line of frames
 	 std::copy(setCurrentCacheLine().begin(), setCurrentCacheLine().end(), std::back_inserter(lst));
@@ -259,7 +287,7 @@ class Opt : public algorithmType
 							 maxdistance = currentdistance; // if there are two elements with same max distance, the first element that had it is chosen
 							 maxindex = c;
 							}
-								if (c >= (getFrameFinalSize() -1)) // if this loop IS at the last element of the cache line (setCurrentCacheLine())...
+								if (c >= (getFrameFinalSize() - 1)) // if this loop IS at the last element of the cache line (setCurrentCacheLine())...
 								{
 								 setCurrentCacheLine()[maxindex] = refstr[i];
 								 setRow(getRow() + 1);
@@ -299,7 +327,7 @@ class Opt_Fifo : public algorithmType
 			{
 			 setMiss(getMiss() + 1); // page miss, then decide what to do next depending on the algorithm.
 			 maxdistance = 0; // must reset the max value found for each new iteration of the reference string
-			 nomatch = 0; // resest so new frames with no match in reference string (refstr) start fresh for each iteration of the reference string
+			 nomatch = 0; // reset so new frames with no match in reference string (refstr) start fresh for each iteration of the reference string
 				for (unsigned int c = 0; c < getFrameFinalSize(); c++) // loop through each frame in the current cache
 				{
 				 // even though "(refstr.begin() + i)" is the current element in the reference string (refstr), it is guaranteed not to be in the current cache of frames (setCurrentCacheLine())
@@ -391,8 +419,8 @@ std::string& rtrim(std::string& s)
 std::string& trim(std::string& s)
 {return ltrim(rtrim(s));}
 
-// This function merges all multiple whitespaces in a row, into one 'space', even if no 'space' character is found.
-// For practical usability, this function allows ANY whitespaces in a row ('space', tab, newline, etc.) to be used as a delimiter.
+// This function merges all multiple white spaces in a row, into one 'space', even if no 'space' character is found.
+// For practical usability, this function allows ANY white spaces in a row ('space', tab, newline, etc.) to be used as a delimiter.
 //================================================================================================================
 void remove_extra_whitespaces(std::string& input) //, std::string &output)
 {
@@ -410,8 +438,8 @@ void remove_extra_whitespaces(std::string& input) //, std::string &output)
 //================================================================================================================
 void cin_custom(std::string& str)
 {
-	getline(std::cin, str);
-	ltrim(str);
+ getline(std::cin, str); // Causes a newline to be created here as well.
+ ltrim(str);
 	for(unsigned int i = 0; i < str.length(); i++)
 	{
 		if (std::isspace(str[i]))
@@ -447,8 +475,14 @@ void calculateAllAlgorithms (std::vector<std::shared_ptr<algorithmType>>& algvec
 //================================================================================================================
 void displayAllAlgorithms (std::vector<std::shared_ptr<algorithmType>>& algvector)
 {
-	for (std::shared_ptr<algorithmType>& alg : algvector)
-	{alg->displayAlgorithm();}
+	for (std::vector<std::shared_ptr<algorithmType>>::iterator itr_pos = algvector.begin(); itr_pos != algvector.end(); ++itr_pos)
+	{
+	 (*itr_pos)->displayAlgorithm();
+		if (std::next(itr_pos, 1) != algvector.end()) // Do not automatically put a space after the last algorithm output.
+		{
+		 std::cout << std::endl; // Space in between each algorithm output.
+		}
+	}
 }
 
 // This function is used by function "getInput" to prevent incorrect input from the user from crashing program.
@@ -621,11 +655,11 @@ int main()
  std::vector<int> refstr; // The reference string that's used by the "calculate" functions that the user defined.
 	while (runagainstr != "no")
 	{
-	 cleanUp (algvector); // On each iteration of this loop, each "calculate" function expects an empty vector. So clean everything up and resest values.
+	 cleanUp (algvector); // On each iteration of this loop, each "calculate" function expects an empty vector. So clean everything up and reset values.
 	 getInput (refstrcount, refstr, maxrefstrsize, maxframesize); // Get input from user.
 	 calculateAllAlgorithms (algvector, refstrcount, refstr); // just calculate one: fifo_obj->calculateAlgorithm(refstrcount, refstr);
 	 displayAllAlgorithms (algvector);                        // just display one:   fifo_obj->displayAlgorithm();
-	 std::cout << "\nWould you like to run again?";
+	 std::cout << "\n\nWould you like to run again?";
 	 cin_custom(runagainstr);
 	 std::transform(runagainstr.begin(), runagainstr.end(), runagainstr.begin(), ::tolower); // change entire string to lower case.
 	}
