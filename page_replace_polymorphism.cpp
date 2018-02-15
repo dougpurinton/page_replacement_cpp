@@ -61,7 +61,7 @@ class algorithmType
 
 		// Pure virtual function that NEEDS to exist within every object of this class, as every object of this
 		// class has that member function called for it automatically. Plus, without it, there would be nothing to display!
-		virtual void calculateAlgorithm(const int& refstrcount, const std::vector<int>& refstr) = 0;
+		virtual void calculateAlgorithm(const int &refstrcount, const std::vector<int> &refstr) = 0;
 
 		virtual void setMiss (unsigned int smiss) final
 		{miss = smiss;}
@@ -119,7 +119,7 @@ class algorithmType
 
 		virtual void displayAlgorithm() // All 3 algorithms can be displayed in the same manner using this member function. If not, override it in derived class.
 		{
-		 std::cout << std::endl << name << " page faults: " << getMiss() << std::endl;
+		 std::cout << name << " page faults: " << getMiss() << std::endl;
 			for (unsigned int a = 0; a < getFrameFinalSize(); a++) // this display method displays this multidimensional vector inversely to match textbooks etc.
 			{
 				for (unsigned int i = 0; i < getVector().size(); i++) // 'getVector().size()' is the same as 'getRow()'.
@@ -156,7 +156,7 @@ class algorithmType
 			}
 		}
 
-		virtual int fillFirstCacheLine(const std::vector<int>& refstr, const int& refstrcount) final
+		virtual int fillFirstCacheLine(const std::vector<int> &refstr, const int &refstrcount) final
 		{
 		 setCurrentCacheLine().clear();
 		 std::vector<int>().swap(setCurrentCacheLine());
@@ -197,7 +197,7 @@ class Fifo : public algorithmType
  Fifo(){} // Default Constructor
  Fifo(std::string pname) : algorithmType(pname){} // Overloaded Constructor. Used if object was assigned a name when it was initialized.
 
-	virtual void calculateAlgorithm(const int& refstrcount, const std::vector<int>& refstr) override // Required for all derived classes of "algorithmType".
+	virtual void calculateAlgorithm(const int &refstrcount, const std::vector<int> &refstr) override // Required for all derived classes of "algorithmType".
 	{
 	 unsigned int fcount = 0; // keeps track of index of the first page added to cache.
 	 int start = fillFirstCacheLine(refstr, refstrcount); // fill in first cache line of frames
@@ -222,7 +222,7 @@ class Lru : public algorithmType
  Lru(){} // Default Constructor
  Lru(std::string pname) : algorithmType(pname){} // Overloaded Constructor. Used if object was assigned a name when it was initialized.
 
-	virtual void calculateAlgorithm(const int& refstrcount, const std::vector<int>& refstr) override // Required for all derived classes of "algorithmType".
+	virtual void calculateAlgorithm(const int &refstrcount, const std::vector<int> &refstr) override // Required for all derived classes of "algorithmType".
 	{
 	 // This algorithm uses the "stack" method, as it requires less code and is easier to understand. However, it is slightly slower than "counters".
 	 std::list<int> lst;
@@ -254,7 +254,7 @@ class Opt : public algorithmType
  Opt(){} // Default Constructor
  Opt(std::string pname) : algorithmType(pname){} // Overloaded Constructor. Used if object was assigned a name when it was initialized.
 
-	virtual void calculateAlgorithm(const int& refstrcount, const std::vector<int>& refstr) override // Required for all derived classes of "algorithmType".
+	virtual void calculateAlgorithm(const int &refstrcount, const std::vector<int> &refstr) override // Required for all derived classes of "algorithmType".
 	{
 	 int maxindex = 0, maxdistance = 0, currentdistance;
 	 std::vector<int>::const_iterator cnst_itr_pos;
@@ -315,7 +315,7 @@ class Opt_Fifo : public algorithmType
  Opt_Fifo(){} // Default Constructor
  Opt_Fifo(std::string pname) : algorithmType(pname){} // Overloaded Constructor. Used if object was assigned a name when it was initialized.
 
-	virtual void calculateAlgorithm(const int& refstrcount, const std::vector<int>& refstr) override // Required for all derived classes of "algorithmType".
+	virtual void calculateAlgorithm(const int &refstrcount, const std::vector<int> &refstr) override // Required for all derived classes of "algorithmType".
 	{
 	 int maxindex = 0, maxdistance = 0, currentdistance, nomatch, fifoindex, fifodistance, fifomindistance;
 	 std::vector<int>::const_iterator cnst_itr_pos;
@@ -394,13 +394,13 @@ class Opt_Fifo : public algorithmType
 
 // This function removes all whitespace completely.
 //================================================================================================================
-void remove_all_whitespaces(std::string& str)
+void remove_all_whitespaces(std::string &str)
 {str.erase(remove_if(str.begin(), str.end(), [](char ch){return std::isspace<char>(ch, std::locale::classic());} ), str.end());}
 
 // These functions trim the white spaces from either side of the input.
 //================================================================================================================
 // trim from start
-std::string& ltrim(std::string& s)
+std::string &ltrim(std::string &s)
 {
  //s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](char c) {return (bool)!(std::isspace(c));}));
  s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](char ch){return (bool)!(std::isspace<char>(ch, std::locale::classic()));} ));
@@ -408,7 +408,7 @@ std::string& ltrim(std::string& s)
 }
 
 // trim from end
-std::string& rtrim(std::string& s)
+std::string &rtrim(std::string &s)
 {
  //s.erase(std::find_if(s.rbegin(), s.rend(), [](char c) {return (bool)!(std::isspace(c));}).base(), s.end());
  s.erase(std::find_if(s.rbegin(), s.rend(), [](char ch){return (bool)!(std::isspace<char>(ch, std::locale::classic()));} ).base(), s.end());
@@ -416,13 +416,13 @@ std::string& rtrim(std::string& s)
 }
 
 // trim from both ends
-std::string& trim(std::string& s)
+std::string &trim(std::string &s)
 {return ltrim(rtrim(s));}
 
 // This function merges all multiple white spaces in a row, into one 'space', even if no 'space' character is found.
 // For practical usability, this function allows ANY white spaces in a row ('space', tab, newline, etc.) to be used as a delimiter.
 //================================================================================================================
-void remove_extra_whitespaces(std::string& input) //, std::string &output)
+void remove_extra_whitespaces(std::string &input) //, std::string &output)
 {
  std::string output; // = "NO_OUTPUT_YET";
  output.clear();  // unless you want to add at the end of existing string, clear the output so it's ready to accept new input.
@@ -436,7 +436,7 @@ void remove_extra_whitespaces(std::string& input) //, std::string &output)
 // The use of "cin >>" requires "std::cin.clear()" and "std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n')"
 // immediately after you use it. This method is cleaner, safer and more portable.
 //================================================================================================================
-void cin_custom(std::string& str)
+void cin_custom(std::string &str)
 {
  getline(std::cin, str); // Causes a newline to be created here as well.
  ltrim(str);
@@ -452,10 +452,10 @@ void cin_custom(std::string& str)
 
 // This function takes care of setting up all objects for the next calculation by resetting certain values.
 //================================================================================================================
-void cleanUp (std::vector<std::shared_ptr<algorithmType>>& algvector)
+void cleanUp (std::vector<std::shared_ptr<algorithmType>> &algvector)
 {
 	// Range based "for" loop that loops through each object of type "algorithmType" and resets everything for each new loop in "main".
-	for (std::shared_ptr<algorithmType>& alg : algvector)
+	for (std::shared_ptr<algorithmType> &alg : algvector)
 	{
 	 alg->clearAlg();
 	 alg->setRow(0);
@@ -465,29 +465,29 @@ void cleanUp (std::vector<std::shared_ptr<algorithmType>>& algvector)
 
 // Function that uses a range based "for" loop to calculate every algorithm that was added to the vector "algvector".
 //================================================================================================================
-void calculateAllAlgorithms (std::vector<std::shared_ptr<algorithmType>>& algvector, const int& refstrcount, const std::vector<int>& refstr)
+void calculateAllAlgorithms (std::vector<std::shared_ptr<algorithmType>> &algvector, const int &refstrcount, const std::vector<int> &refstr)
 {
-	for (std::shared_ptr<algorithmType>& alg : algvector)
+	for (std::shared_ptr<algorithmType> &alg : algvector)
 	{alg->calculateAlgorithm(refstrcount, refstr);}
 }
 
 // Function that uses a range based "for" loop to display every algorithm that was added to the vector "algvector".
 //================================================================================================================
-void displayAllAlgorithms (std::vector<std::shared_ptr<algorithmType>>& algvector)
+void displayAllAlgorithms (std::vector<std::shared_ptr<algorithmType>> &algvector)
 {
 	for (std::vector<std::shared_ptr<algorithmType>>::iterator itr_pos = algvector.begin(); itr_pos != algvector.end(); ++itr_pos)
 	{
 	 (*itr_pos)->displayAlgorithm();
 		if (std::next(itr_pos, 1) != algvector.end()) // Do not automatically put a space after the last algorithm output.
 		{
-		 std::cout << std::endl; // Space in between each algorithm output.
+		 std::cout << "\n\n"; // Space in between each algorithm output.
 		}
 	}
 }
 
 // This function is used by function "getInput" to prevent incorrect input from the user from crashing program.
 //================================================================================================================
-int strToInt(const std::string& str, int& i)
+int strToInt(const std::string &str, int &i)
 {
  int r_error = 0;
 	try
@@ -519,7 +519,7 @@ int strToInt(const std::string& str, int& i)
 
 // This function gets the input from the user, which is the reference string and how many rows (frames) it should be.
 //================================================================================================================
-int getInput(int& refstrcount, std::vector<int>& refstr, const int& maxrefstrsize, const int& maxframesize)
+int getInput(int &refstrcount, std::vector<int> &refstr, const int &maxrefstrsize, const int &maxframesize)
 {
  refstr.clear(); // this reference string is being cleared from the last inputted values, to accept the new reference string.
  std::vector<int>().swap(refstr); // also shrink down the capacity of vector for each new request, so it doesn't cause any memory problems.
@@ -541,10 +541,12 @@ int getInput(int& refstrcount, std::vector<int>& refstr, const int& maxrefstrsiz
 		}
 	}
 	
+ std::cout << std::endl;
+	
 	if (numint == 1)
 	{
 	 numint = 0;
-	 std::cout << "\nPlease enter the number of reference string elements (between 1 and " << maxrefstrsize << ")\n";
+	 std::cout << "Please enter the number of reference string elements (between 1 and " << maxrefstrsize << ")\n";
 		while (numint < 1 || numint > maxrefstrsize)
 		{
 		 cin_custom(selectionnumber);
@@ -563,9 +565,11 @@ int getInput(int& refstrcount, std::vector<int>& refstr, const int& maxrefstrsiz
 		{
 		 randnum = std::rand() % 10;
 		 refstr.push_back(randnum);
-		 std::cout << refstr[i] << " ";
+		 std::cout << refstr[i];
+			if((i + 1) < refstrcount)
+			{std::cout << " ";}
 		}
-	 std::cout << "\n\n";
+	 std::cout << std::endl;
 	}
 	
 	else // numint = 2
@@ -622,8 +626,10 @@ int getInput(int& refstrcount, std::vector<int>& refstr, const int& maxrefstrsiz
 		}
 	}
  
+ std::cout << std::endl;
+ 
  numint = 0;
- std::cout << "\nPlease enter the number of the frames (between 1 and " << maxframesize << ")\n";
+ std::cout << "Please enter the number of the frames (between 1 and " << maxframesize << ")\n";
 	while (numint < 1 || numint > maxframesize)
 	{
 	 cin_custom(selectionnumber);
@@ -657,11 +663,15 @@ int main()
 	{
 	 cleanUp (algvector); // On each iteration of this loop, each "calculate" function expects an empty vector. So clean everything up and reset values.
 	 getInput (refstrcount, refstr, maxrefstrsize, maxframesize); // Get input from user.
+	 std::cout << std::endl;
 	 calculateAllAlgorithms (algvector, refstrcount, refstr); // just calculate one: fifo_obj->calculateAlgorithm(refstrcount, refstr);
 	 displayAllAlgorithms (algvector);                        // just display one:   fifo_obj->displayAlgorithm();
-	 std::cout << "\n\nWould you like to run again?";
+	 std::cout << "\n\n";
+	 std::cout << "Would you like to run again?";
 	 cin_custom(runagainstr);
 	 std::transform(runagainstr.begin(), runagainstr.end(), runagainstr.begin(), ::tolower); // change entire string to lower case.
+		if (runagainstr != "no")
+		{std::cout << std::endl;}
 	}
  return 0;
 }
